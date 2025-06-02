@@ -1,6 +1,7 @@
 <?php
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Mollie\Bundle\PaymentBundle\IntegrationCore\BusinessLogic\PaymentMethod\Model\PaymentMethodConfig;
 use Oro\Bundle\EntityConfigBundle\Attribute\Entity\AttributeFamily;
@@ -16,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 /**
  * Class MollieProductAttribute
  */
-class MollieProductAttribute extends AbstractFixture implements ContainerAwareInterface
+class MollieProductAttribute extends AbstractFixture implements ContainerAwareInterface, DependentFixtureInterface
 {
     use MakeProductAttributesTrait;
 
@@ -106,5 +107,12 @@ class MollieProductAttribute extends AbstractFixture implements ContainerAwareIn
             $manager->persist($defaultFamily);
             $manager->flush();
         }
+    }
+
+    public function getDependencies(): array
+    {
+        return [
+            LoadProductDefaultAttributeFamilyData::class,
+        ];
     }
 }
